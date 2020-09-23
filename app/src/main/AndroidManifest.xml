@@ -9,7 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".mainActivities.PostActivity"></activity>
+
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="testDB.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="3" />
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="com.example.sunbelttestapp.models" />
+
+        <activity android:name=".mainActivities.SplashActivity" />
+        <activity android:name=".mainActivities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
