@@ -6,26 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.sunbelttestapp.R
 import com.example.sunbelttestapp.models.PostDB
 
-class PostAdapter(var context: Context, var postList: List<PostDB>) : RecyclerView.Adapter<PostAdapter.PostViewHolder?>() {
+class PostAdapter(var context: Context?, private var postList: List<PostDB>?) : RecyclerView.Adapter<PostAdapter.PostViewHolder?>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+        //inflate view
         val v: View = LayoutInflater.from(parent.context).inflate(R.layout.post_list_item, parent, false)
         return PostViewHolder(v)
     }
 
     override fun getItemCount(): Int {
-        return postList.size
+        return postList!!.size
     }
 
     override fun onBindViewHolder(postViewHolder: PostViewHolder, position: Int) {
-
-        postViewHolder.title!!.text = postList[position].postTitle
-        postViewHolder.body!!.text = postList[position].postText
+        //set visual information
+        postViewHolder.title!!.text = postList?.get(position)!!.postTitle
+        postViewHolder.body!!.text = postList?.get(position)!!.postText
     }
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,8 +37,6 @@ class PostAdapter(var context: Context, var postList: List<PostDB>) : RecyclerVi
             title = itemView.findViewById(R.id.title)
             body = itemView.findViewById(R.id.body)
         }
-
-
     }
 
 }

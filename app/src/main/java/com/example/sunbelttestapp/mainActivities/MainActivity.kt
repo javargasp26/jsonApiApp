@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,7 @@ import com.example.sunbelttestapp.models.UserDB
 import retrofit2.Retrofit
 
 class MainActivity : AppCompatActivity() {
-
+    //global variables
     var context: Context? = null
     var postDB: PostDB? = null
     var userDB: UserDB? = null
@@ -39,11 +40,11 @@ class MainActivity : AppCompatActivity() {
 
         postDBList = postDB!!.postList
         userDBList = userDB!!.userList
-
+        //initialize visual components
         initComponents()
-
+        //initialize listeners
         initListeners()
-
+        //build recycler view adapter
         buildUserAdapter()
     }
 
@@ -59,9 +60,14 @@ class MainActivity : AppCompatActivity() {
         val userList: List<UserDB>
         userList = userDB!!.getFilteredUserList(filter)
         userAdapter = UserAdapter(userList, context)
-
+        //set adapter item click listener
         userAdapter!!.setOnItemClickListener( object: UserAdapter.OnItemClickListener {
             override fun onClick(position: Int) {
+                val userId = userList[position].userId
+                getPost(userId)
+            }
+
+            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val userId = userList[position].userId
                 getPost(userId)
             }
@@ -74,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
+        //check for input changes
         editTextSearch!!.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -86,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
+    //go to the post information activity
     fun getPost(userId: Int) {
         val intent = Intent(context, PostActivity::class.java)
         intent.putExtra("userId", userId)

@@ -31,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SplashActivity : AppCompatActivity() {
 
+    //global variables
     private var handler: Handler? = null
     private var postDB: PostDB? = null
     private var userDB: UserDB? = null
@@ -38,20 +39,22 @@ class SplashActivity : AppCompatActivity() {
     private var userDBList: List<UserDB>? = null
     private var context: Context? = null
     private var retrofit: Retrofit? = null
+    //api url
     private val baseUrl = "https://jsonplaceholder.typicode.com/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
+        //initialize database
         ActiveAndroid.initialize(this)
         context = this
         postDB = PostDB()
         userDB = UserDB()
         postDBList = postDB!!.postList
         userDBList = userDB!!.userList
-
+        //check if data has been already downloaded. if not then download it, else go main activity
         if (userDBList!!.isEmpty() || postDBList!!.isEmpty()) {
+            //retrofit constructor
             retrofit = Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -69,14 +72,18 @@ class SplashActivity : AppCompatActivity() {
             finish()
         }
     }
-
+    //download information function
     private fun downloadInfo() {
+        //download post object
         val postHolder: PostHolder = retrofit!!.create(PostHolder::class.java)
+        //download user object
         val userHolder: UserHolder = retrofit!!.create(UserHolder::class.java)
         val postCall: Call<List<Post>> = postHolder.post
         val userCall: Call<List<User>> = userHolder.users
+        //download post petition
         postCall.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
+                //check if there is error response
                 if (!response.isSuccessful) {
                     Toast.makeText(context, "Respuesta: " + response.code(),
                             Toast.LENGTH_LONG).show()
@@ -91,14 +98,16 @@ class SplashActivity : AppCompatActivity() {
                             post.getText())
                 }
             }
-
+            //handle failure response
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 Toast.makeText(context, "Respuesta: $t",
                         Toast.LENGTH_LONG).show()
             }
         })
+        //download user petition
         userCall.enqueue(object : Callback<List<User>> {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+                //check if there is error response
                 if (!response.isSuccessful) {
                     Toast.makeText(context, "Respuesta: " + response.code(),
                             Toast.LENGTH_LONG).show()
@@ -113,7 +122,7 @@ class SplashActivity : AppCompatActivity() {
                             user.getPhone())
                 }
             }
-
+            //handle failure response
             override fun onFailure(call: Call<List<User>>, t: Throwable) {
                 Toast.makeText(context, "Respuesta: $t",
                         Toast.LENGTH_LONG).show()

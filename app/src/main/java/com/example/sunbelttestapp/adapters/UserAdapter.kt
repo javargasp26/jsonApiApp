@@ -1,6 +1,7 @@
 package com.example.sunbelttestapp.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,30 +12,32 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sunbelttestapp.R
+import com.example.sunbelttestapp.mainActivities.MainActivity
+import com.example.sunbelttestapp.mainActivities.PostActivity
 import com.example.sunbelttestapp.models.UserDB
 
-class UserAdapter(var context: List<UserDB>, userList: Context?) : RecyclerView.Adapter<UserAdapter.UserViewHolder?>(), View.OnClickListener{
+class UserAdapter(private var userList : List<UserDB>, context : Context?) : RecyclerView.Adapter<UserAdapter.UserViewHolder?>(), View.OnClickListener{
 
-    var userList: List<UserDB>? = null
 
     private val listener: View.OnClickListener? = null
     private var mListener: AdapterView.OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        //inflate view
         val v: View = LayoutInflater.from(parent.context).inflate(R.layout.user_list_item, parent, false)
         v.setOnClickListener(this)
         return UserViewHolder(v, mListener as OnItemClickListener)
     }
 
     override fun getItemCount(): Int {
-        return userList!!.size
+        return userList.size
     }
 
     override fun onBindViewHolder(userViewHolder: UserViewHolder, position: Int) {
-
-        userViewHolder.name!!.text = userList!![position].userName
-        userViewHolder.phone!!.text = userList!![position].userPhone
-        userViewHolder.email!!.text = userList!![position].userEmail
+        //set visual information
+        userViewHolder.name!!.text = userList[position].userName
+        userViewHolder.phone!!.text = userList[position].userPhone
+        userViewHolder.email!!.text = userList[position].userEmail
     }
 
     interface OnItemClickListener : AdapterView.OnItemClickListener {
@@ -64,8 +67,8 @@ class UserAdapter(var context: List<UserDB>, userList: Context?) : RecyclerView.
 
             btnViewPost!!.setOnClickListener(View.OnClickListener {
                 if (itemView.hasFocus()) {
-                    itemView.clearFocus() //we can put it inside the second if as well, but it makes sense to do it to all scraped views
-                    //Optional: also hide keyboard in that case
+                    itemView.clearFocus()
+                    //hide keyboard when item has been clicked
                     if (itemView is EditText) {
                         val imm = itemView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                         imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0)
@@ -73,6 +76,7 @@ class UserAdapter(var context: List<UserDB>, userList: Context?) : RecyclerView.
                 }
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
+                    //click function
                     listener.onClick(position)
                 }
             })
